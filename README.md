@@ -11,14 +11,18 @@ Pass all needed arguments to the script: training content file, language, unicha
 [here](https://github.com/tesseract-ocr/langdata)), and a directory with *.ttf fonts.
 Run the script passing font name(s);
 
-Example `tesstrain -l lang_extra -f ./content -u .unicharset 'Monotype Corsiva Regular' 'American Captain'`
+Example `tesstrain -l lang_extra -f ./content -u .unicharset 'Monotype Corsiva Regular : 1 0 0 1 0' 'American Captain : 0 1 0 0 0'`
 
 # USAGE
 USAGE:                                                                                                                                                        
-       tesstrain [-f contentfile] [-f fontdir] [-u unicharset] [-l lang] fontname1 [fontname2 ...]                                                               
+       tesstrain [-f contentfile] [-f fontdir] [-u unicharset] [-l lang] fontname1 [fontname2 ...]               
+                                                
 OPTIONS:                                                                                                                                                      
       -h show this help message                                                                                                                               
       -f provides directory with *.ttf fonts. Default is .fonts/                                                                                              
       -u provides the unicharset file used to generate shapes. Default is .unicharset                                                                         
       -c provides the text file used to generate tif/box pair. Default is .content                                                                            
       -l provides the output package name. Default is eng
+
+PROPERTIES:                                                                                                                                                   
+       Properties are 5 binary numbers describing font, where they are for <italic><bold><fixed><serif><fraktur>"

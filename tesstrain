@@ -1,18 +1,26 @@
-#!/bin/bash
+#!/bin/sh
+help="Created by tuule_
+Script crafted to generate tesseract *.traineddata files.                                                                                                    
+
+USAGE:                                                                                                                                                       
+       $(basename "$0") [-f contentfile] [-f fontdir] [-u unicharset] [-l lang] 'fontname1 : properties' ['fontname2 : properties' ...]                                                    
+
+OPTIONS:                                                                                                                                                     
+      -h show this help message                                                                                                                              
+
+      -f provides directory with *.ttf fonts. Default is .fonts/                                                                                             
+
+      -u provides the unicharset file used to generate shapes. Default is .unicharset                                                                        
+
+      -c provides the text file used to generate tif/box pair. Default is .content                                                                           
+
+      -l provides the output package name. Default is engCreated by tuule_
+
+PROPERTIES:
+       Properties are 5 binary numbers describing font, where they are for <italic><bold><fixed><serif><fraktur>"
 usage()
 {
-    cat <<EOF
-Created by tuule_                                                                                                                                       
-Script crafted to generate tesseract *.traineddata files.                                                                                                     
-USAGE:                                                                                                                                                        
-       $(basename "$0") [-f contentfile] [-f fontdir] [-u unicharset] [-l lang] fontname1 [fontname2 ...]                                                               
-OPTIONS:                                                                                                                                                      
-      -h show this help message                                                                                                                               
-      -f provides directory with *.ttf fonts. Default is .fonts/                                                                                              
-      -u provides the unicharset file used to generate shapes. Default is .unicharset                                                                         
-      -c provides the text file used to generate tif/box pair. Default is .content                                                                            
-      -l provides the output package name. Default is engCreated by tuule_    
-EOF
+    echo "$help"
 }
 
 CONTENT_FILE=".content"
@@ -40,43 +48,42 @@ done
 
 shift $((OPTIND-1))
 
-if [[ $# == 0 ]]; then
+if [ $# == 0 ]; then
     echo "No input provided!"
     usage
 fi
 
-if [[ ! -f $CONTENT_FILE ]]; then
+if [ ! -f $CONTENT_FILE ]; then
     echo "Content file not found!"
     exit 1
 fi
 
-if [[ ! -d $FONT_DIR ]]; then
+if [ ! -d $FONT_DIR ]; then
     echo "Font directory not found!"
     exit 1
 fi
 
-if [[ ! -f $UNICHARSET ]]; then
+if [ ! -f $UNICHARSET ]; then
     echo "unicharset file not found!"
     exit 1
 fi
 
 for i in "$@"; do
-    fontname=$(echo $i | awk '{gsub(" ", "", $0); print}' | awk '{print tolower($0)}')
-    echo "Enter the $i font properties <i><b><m><s><f>"
-    read properties < /dev/stdin
-    echo $fontname $properties >> font_properties
-done
-
-for i in "$@"; do
-    fontname=$(echo $i | awk '{gsub(" ", "", $0); print}' | awk '{print tolower($0)}')
-    echo "Generating tif/box pair for" $i "font"
-    text2image --ptsize=32 --xsize=2550 --ysize=3300 --resolution=300 --text=$CONTENT_FILE --outputbase=$LANG.$fontname.exp0 --font="$i" --fonts_dir=$FONT_DIR || exit 1;
+    font=$(echo "$i" | awk -F':' '{print $1}')
+    properties=$(echo "$i" | awk -F':' '{print $2}')
+    if [ -z "$properties" ]; then
+	echo "No properties detected for $font. Please, input argument in format 'Font Name : properties' where properties are 5 bin numbers."
+	exit 1;
+    fi
+    fontname=$(echo "$font" | awk '{gsub(" ", "", $0); print}' | awk '{print tolower($0)}')
+    echo "Generating tif/box pair for" $font "font"
+    text2image --ptsize=32 --xsize=2550 --ysize=3300 --resolution=300 --text=$CONTENT_FILE --outputbase=$LANG.$fontname.exp0 --font="$font" --fonts_dir=$FONT_DIR || exit 1;
 done
 
 for i in *.tif; do
     fontname=$(echo $i | awk -F'.' '{print $2}')
-    echo $LANG $fontname
-    tesseract $i $LANG.$fontname.box box.train || exit 1;
+    echo "$i" "$LANG.$fontname.box"
+    tesseract "$i" "$LANG.$fontname.box" box.train || exit 1;
 done
 
 shapeclustering -F font_properties -U .unicharset *.tr &&\
