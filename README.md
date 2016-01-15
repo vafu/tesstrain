@@ -1,14 +1,18 @@
 # About
 Simple tesseract training script made for easy traineddata creation.
 No box editing needed!
+
 # Requirements
-* imagemagick
-* tesseract-3.04
-#HOWTO
+- imagemagick
+- tesseract-3.04
+
+# HOWTO
 Pass all needed arguments to the script: training content file, language, unicharset (Latin unicharset could be found in this repo, more 
 [here](https://github.com/tesseract-ocr/langdata)), and a directory with *.ttf fonts.
 Run the script passing font name(s);
+
 Example `tesstrain -f ./content -u .unicharset 'Monotype Corsiva Regular' 'American Captain'`
+
 # USAGE
 USAGE:                                                                                                                                                        
        tesstrain [-f contentfile] [-f fontdir] [-u unicharset] [-l lang] fontname1 [fontname2 ...]                                                               
