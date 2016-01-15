@@ -11,7 +11,7 @@ Pass all needed arguments to the script: training content file, language, unicha
 [here](https://github.com/tesseract-ocr/langdata)), and a directory with *.ttf fonts.
 Run the script passing font name(s);
 
-Example `tesstrain -f ./content -u .unicharset 'Monotype Corsiva Regular' 'American Captain'`
+Example `tesstrain -l lang_extra -f ./content -u .unicharset 'Monotype Corsiva Regular' 'American Captain'`
 
 # USAGE
 USAGE:                                                                                                                                                        
