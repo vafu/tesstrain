@@ -5,7 +5,7 @@ usage()
 Created by tuule_                                                                                                                                       
 Script crafted to generate tesseract *.traineddata files.                                                                                                     
 USAGE:                                                                                                                                                        
-       $(basename "$0") [-f contentfile] [-f fontdir] [-u unicharset] [-l lang] fontname1 [fontname2 ...]                                                               
+       $(basename "$0") [-f contentfile] [-f fontdir] [-u unicharset] fontname1 [fontname2 ...]                                                               
 OPTIONS:                                                                                                                                                      
       -h show this help message                                                                                                                               
       -f provides directory with *.ttf fonts. Default is .fonts/                                                                                              
@@ -39,11 +39,6 @@ while getopts "hf:u:c:l:" OPTION; do
 done
 
 shift $((OPTIND-1))
-
-if [[ $# == 0 ]]; then
-    echo "No input provided!"
-    usage
-fi
 
 if [ ! -f $CONTENT_FILE ]; then
     echo "Content file not found!"
