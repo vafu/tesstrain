@@ -1,0 +1,2 @@
+# tesstrain
+Tesseract training script
