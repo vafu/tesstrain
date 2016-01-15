@@ -45,17 +45,17 @@ if [[ $# == 0 ]]; then
     usage
 fi
 
-if [ ! -f $CONTENT_FILE ]; then
+if [[ ! -f $CONTENT_FILE ]]; then
     echo "Content file not found!"
     exit 1
 fi
 
-if [ ! -d $FONT_DIR ]; then
+if [[ ! -d $FONT_DIR ]]; then
     echo "Font directory not found!"
     exit 1
 fi
 
-if [ ! -f $UNICHARSET ]; then
+if [[ ! -f $UNICHARSET ]]; then
     echo "unicharset file not found!"
     exit 1
 fi
