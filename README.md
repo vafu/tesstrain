@@ -15,10 +15,10 @@ Example `tesstrain -l lang_extra -f ./content -u .unicharset 'Monotype Corsiva R
 
 # USAGE
 USAGE:                                                                                                                                                        
-     -  tesstrain [-f contentfile] [-f fontdir] [-u unicharset] [-l lang] fontname1 [fontname2 ...]                                                               
+     *  tesstrain [-f contentfile] [-f fontdir] [-u unicharset] [-l lang] fontname1 [fontname2 ...]                                                               
 OPTIONS:                                                                                                                                                      
-     - -h show this help message                                                                                                                               
-     - -f provides directory with *.ttf fonts. Default is .fonts/                                                                                              
-     - -u provides the unicharset file used to generate shapes. Default is .unicharset                                                                         
-     - -c provides the text file used to generate tif/box pair. Default is .content                                                                            
-     - -l provides the output package name. Default is engCreated by tuule_
+     * -h show this help message                                                                                                                               
+     * -f provides directory with *.ttf fonts. Default is .fonts/                                                                                              
+     * -u provides the unicharset file used to generate shapes. Default is .unicharset                                                                         
+     * -c provides the text file used to generate tif/box pair. Default is .content                                                                            
+     * -l provides the output package name. Default is engCreated by tuule_
