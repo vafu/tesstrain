@@ -13,11 +13,18 @@ OPTIONS:
       -u provides the unicharset file used to generate shapes. Default is .unicharset                                                                        
 
       -c provides the text file used to generate tif/box pair. Default is .content                                                                           
+       
+      -w provides the wordlist of the most frequent words (optional)
 
-      -l provides the output package name. Default is engCreated by tuule_
+      -l provides the output package name. Default is eng
 
 PROPERTIES:
        Properties are 5 binary numbers describing font, where they are for <italic><bold><fixed><serif><fraktur>"
+clear_proj()
+{
+    rm  *.box *.tif *.tr *.box.txt *normproto *inttemp *shapetable $LANG.unicharset *pffmtable font_properties *.freq-dawg
+}
+
 usage()
 {
     echo "$help"
@@ -26,20 +33,26 @@ usage()
 CONTENT_FILE=".content"
 FONT_DIR=".fonts/"
 UNICHARSET=".unicharset"
+WORDLIST=""
 LANG="eng"
 
-while getopts "hf:u:c:l:" OPTION; do
+while getopts "hf:u:c:l:w:d" OPTION; do
     case $OPTION in
-	c ) CONTENT_FILE=$OPTARG;;
+	c ) CONTENT_FILE="$OPTARG";;
 	
-	l ) LANG=$OPTARG;;
+	l ) LANG="$OPTARG";;
 	
-	f ) FONT_DIR=$OPTARG;;
+	f ) FONT_DIR="$OPTARG";;
 	
-	u ) UNICHARSET=$OPTARG;;
+	u ) UNICHARSET="$OPTARG";;
+
+	w ) WORDLIST="$OPTARG";;
 	
 	h ) usage
 	    exit 0;;
+
+	d ) clear_proj
+	    exit;;
 	
 	? ) usage
 	    exit 1;;
@@ -76,6 +89,8 @@ for i in "$@"; do
 	exit 1;
     fi
     fontname=$(echo "$font" | awk '{gsub(" ", "", $0); print}' | awk '{print tolower($0)}')
+    echo "$fontname$properties" >> font_properties
+   
     echo "Generating tif/box pair for" $font "font"
     text2image --ptsize=32 --xsize=2550 --ysize=3300 --resolution=300 --text=$CONTENT_FILE --outputbase=$LANG.$fontname.exp0 --font="$font" --fonts_dir=$FONT_DIR || exit 1;
 done
@@ -86,13 +101,17 @@ for i in *.tif; do
     tesseract "$i" "$LANG.$fontname.box" box.train || exit 1;
 done
 
+
 shapeclustering -F font_properties -U .unicharset *.tr &&\
     mftraining -F font_properties -U .unicharset -O $LANG.unicharset *.tr &&\
     cntraining *.tr
+if [ ! -z "$WORDLIST" ]; then
+    wordlist2dawg "$WORDLIST" $LANG.freq-dawg $LANG.unicharset
+fi
 mv normproto $LANG.normproto
 mv inttemp  $LANG.inttemp
 mv pffmtable  $LANG.pffmtable
 mv shapetable  $LANG.shapetable
 combine_tessdata $LANG. &&\
     echo "Succesfully generated" $LANG "package."
-rm  *.box *.tif *.tr *.box.txt *.normproto *.inttemp *.shapetable $LANG.unicharset *.pffmtable font_properties
+clear_proj
