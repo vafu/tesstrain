@@ -25,4 +25,4 @@ OPTIONS:
       -l provides the output package name. Default is eng
 
 PROPERTIES:                                                                                                                                                   
-       Properties are 5 binary numbers describing font, where they are for <italic><bold><fixed><serif><fraktur>"
+       Properties are 5 binary numbers describing font, where they are for "<italic><bold><fixed><serif><fraktur>"
